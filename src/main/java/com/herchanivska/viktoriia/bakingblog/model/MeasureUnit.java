@@ -5,7 +5,7 @@ public enum MeasureUnit {
     MILLILITERS,
     PIECES;
 
-    public String getName() {
+    public String getLowerCaseName() {
         return super.name().toLowerCase();
     }
 }

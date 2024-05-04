@@ -3,6 +3,7 @@ package com.herchanivska.viktoriia.bakingblog.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
@@ -22,10 +23,15 @@ public class Recipe {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @NotEmpty(message = "Recipe name can not be null or empty")
-    @Pattern(regexp = "[a-zA-Z ]+", message = "Recipe name can contain only letters and spaces")
+    @NotNull(message = "Recipe name can not be null")
+    @Pattern(regexp = "[a-zA-Z]+( [a-zA-Z]+)*", message = "Recipe name can contain only letters and spaces between words")
     private String name;
 
+    @Column(name = "cooking_time_in_minutes")
+    @Min(value = 1, message = "Cooking time should be at least 1 minute")
+    private int cookingTimeMinutes;
+
+    @NotNull(message = "Recipe author can not be null")
     @ManyToOne(targetEntity = User.class)
     @JoinColumn(name = "author_id", referencedColumnName = "id")
     private User author;
@@ -40,8 +46,4 @@ public class Recipe {
 
     @OneToOne(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
     private RecipeCooking recipeCooking;
-
-    @Column(name = "cooking_time_in_minutes")
-    @Min(value = 1, message = "Cooking time should be at least 1 minute")
-    private int cookingTimeMinutes;
 }
