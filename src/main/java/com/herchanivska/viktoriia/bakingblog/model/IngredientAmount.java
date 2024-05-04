@@ -14,7 +14,7 @@ import lombok.*;
 @ToString
 @Embeddable
 public class IngredientAmount {
-    @Min(value = 1, message = "Amount of ingredients must be at least 1")
+    @Min(value = 1, message = "Amount of ingredient must be at least 1")
     private int amount;
 
     @Enumerated(EnumType.STRING)
