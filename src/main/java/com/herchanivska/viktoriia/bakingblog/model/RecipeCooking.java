@@ -15,9 +15,6 @@ import lombok.Setter;
 @Table(name = "recipe_cooking_steps")
 public class RecipeCooking {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long id;
-
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "recipe_id")
     private Recipe recipe;
