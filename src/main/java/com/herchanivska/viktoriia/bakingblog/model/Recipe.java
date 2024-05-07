@@ -41,7 +41,4 @@ public class Recipe {
     )
     @MapKeyJoinColumn(name = "ingredient_id")
     private Map<Ingredient, IngredientAmount> ingredients;
-
-    @OneToOne(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
-    private RecipeCooking recipeCooking;
 }

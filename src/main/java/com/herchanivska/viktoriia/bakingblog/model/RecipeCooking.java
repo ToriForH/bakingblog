@@ -15,12 +15,16 @@ import lombok.Setter;
 @Table(name = "recipe_cooking_steps")
 public class RecipeCooking {
     @Id
+    @Column(name = "recipe_id")
+    private long recipeId;
+
     @OneToOne(fetch = FetchType.LAZY)
+    @MapsId
     @JoinColumn(name = "recipe_id")
     private Recipe recipe;
 
     @NotEmpty(message = "Cooking steps can not be null or empty")
     @Lob
     @Column(name = "steps", columnDefinition = "TEXT")
-    private String cookingSteps; //will be serialized as List<String>
+    private String cookingSteps; //will be serialized as List<String> to type JSON
 }
