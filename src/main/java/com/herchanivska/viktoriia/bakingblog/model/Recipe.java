@@ -2,12 +2,10 @@ package com.herchanivska.viktoriia.bakingblog.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
-import java.util.List;
 import java.util.Map;
 
 @Getter
@@ -43,7 +41,4 @@ public class Recipe {
     )
     @MapKeyJoinColumn(name = "ingredient_id")
     private Map<Ingredient, IngredientAmount> ingredients;
-
-    @OneToOne(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
-    private RecipeCooking recipeCooking;
 }

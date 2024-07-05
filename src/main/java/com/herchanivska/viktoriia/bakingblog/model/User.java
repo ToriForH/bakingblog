@@ -5,15 +5,15 @@ import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
-@ToString
+@EqualsAndHashCode(of = {"id", "email", "username", "birthDate"})
+@ToString(exclude = {"password", "myRecipes", "savedRecipes", "likedRecipes", "followers"})
 @Entity
 @Table(name = "users")
 public class User {
@@ -43,23 +43,23 @@ public class User {
     private LocalDate birthDate;
 
     @OneToMany(targetEntity = Recipe.class, mappedBy = "author")
-    private List<Recipe> myRecipes;
+    private Set<Recipe> myRecipes = new HashSet<>();
 
     @ManyToMany(targetEntity = Recipe.class)
     @JoinTable(name = "saved_recipes",
     joinColumns = @JoinColumn(name = "user_id"),
     inverseJoinColumns = @JoinColumn(name = "recipe_id", referencedColumnName = "id"))
-    private Set<Recipe> savedRecipes;
+    private Set<Recipe> savedRecipes = new HashSet<>();
 
     @ManyToMany(targetEntity = Recipe.class)
     @JoinTable(name = "liked_recipes",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "recipe_id", referencedColumnName = "id"))
-    private List<Recipe> likedRecipes;
+    private Set<Recipe> likedRecipes = new HashSet<>();
 
     @ManyToMany(targetEntity = User.class)
     @JoinTable(name = "user_followers",
     joinColumns = @JoinColumn(name = "user_id"),
     inverseJoinColumns = @JoinColumn(name = "follower_id", referencedColumnName = "id"))
-    private List<User> followers;
+    private Set<User> followers = new HashSet<>();
 }
