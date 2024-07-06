@@ -1,5 +1,6 @@
 package com.herchanivska.viktoriia.bakingblog.model;
 
+import com.herchanivska.viktoriia.bakingblog.constants.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -12,6 +13,7 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @EqualsAndHashCode(of = {"id", "email", "username", "birthDate"})
 @ToString(exclude = {"password", "myRecipes", "savedRecipes", "likedRecipes", "followers"})
 @Entity
@@ -41,6 +43,9 @@ public class User {
 
     @Past(message = "Birth date should be before today")
     private LocalDate birthDate;
+
+    @Enumerated(value = EnumType.STRING)
+    private Role role;
 
     @OneToMany(targetEntity = Recipe.class, mappedBy = "author")
     private Set<Recipe> myRecipes = new HashSet<>();

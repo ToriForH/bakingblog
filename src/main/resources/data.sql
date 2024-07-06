@@ -1,6 +1,6 @@
-INSERT INTO users (email, username, password, birth_date) VALUES ('john@mail.com', 'John-user', '1111', '2003-07-12');
-INSERT INTO users (email, username, password, birth_date) VALUES ('hannah@mail.com', 'Hannah-user', '2222', '1999-04-23');
-INSERT INTO users (email, username, password, birth_date) VALUES ('tom@mail.com', 'Tom-user', '3333', '2000-11-07');
+INSERT INTO users (email, username, password, birth_date, role) VALUES ('john@mail.com', 'John-user', '$2a$10$CJgEoobU2gm0euD4ygru4ukBf9g8fYnPrMvYk.q0GMfOcIDtUhEwC', '2003-07-12', 'ROLE_ADMIN');
+INSERT INTO users (email, username, password, birth_date, role) VALUES ('hannah@mail.com', 'Hannah-user', '$2a$10$yYQaJrHzjOgD5wWCyelp0e1Yv1KEKeqUlYfLZQ1OQvyUrnEcX/rOy', '1999-04-23', 'ROLE_USER');
+INSERT INTO users (email, username, password, birth_date, role) VALUES ('tom@mail.com', 'Tom-user', '$2a$10$CdEJ2PKXgUCIwU4pDQWICuiPjxb1lysoX7jrN.Y4MTMoY9pjfPALO', '2000-11-07', 'ROLE_USER');
 
 INSERT INTO ingredients (name) VALUES ('flour');
 INSERT INTO ingredients (name) VALUES ('egg');
