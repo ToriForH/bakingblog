@@ -1,14 +1,11 @@
 package com.herchanivska.viktoriia.bakingblog.service.serviceimpl;
 
 import com.herchanivska.viktoriia.bakingblog.constants.Role;
-import com.herchanivska.viktoriia.bakingblog.dto.UserSignInDto;
 import com.herchanivska.viktoriia.bakingblog.dto.UserSignUpDto;
 import com.herchanivska.viktoriia.bakingblog.exception.*;
 import com.herchanivska.viktoriia.bakingblog.model.User;
 import com.herchanivska.viktoriia.bakingblog.repository.UserRepository;
-import com.herchanivska.viktoriia.bakingblog.security.JwtTool;
 import com.herchanivska.viktoriia.bakingblog.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,14 +19,12 @@ import java.util.Set;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtTool jwtTool;
     private final ModelMapper mapper;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtTool jwtTool) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.jwtTool = jwtTool;
         this.mapper = new ModelMapper();
     }
 
@@ -93,23 +88,5 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> findAll() {
         return userRepository.findAll();
-    }
-
-    @Override
-    public String signIn(UserSignInDto user) {
-        User userToSignIn = findByEmail(user.getUsername());
-        if (!isPasswordCorrect(user, userToSignIn)) {
-            throw new WrongPasswordException("Wrong password.");
-        }
-        return jwtTool.createAccessToken(user.getUsername(), userToSignIn.getRole());
-    }
-
-    private boolean isPasswordCorrect(UserSignInDto signInDto, User user) {
-        return passwordEncoder.matches(signInDto.getPassword(), user.getPassword());
-    }
-
-    @Override
-    public String getToken(HttpServletRequest request) {
-        return jwtTool.getTokenFromHttpServletRequest(request);
     }
 }

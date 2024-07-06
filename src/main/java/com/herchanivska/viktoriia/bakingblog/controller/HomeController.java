@@ -20,9 +20,4 @@ public class HomeController {
     public String home(Model model) {
         return "home";
     }
-
-    @PostMapping({"/", "/home"})
-    public String home() {
-        return "home";
-    }
 }

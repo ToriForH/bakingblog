@@ -10,8 +10,8 @@
     <h1>Registration</h1>
     <div th:if="${param.error != null}">Invalid username or password.</div>
     <div th:if="${param.logout != null}">You was logged out.</div>
-    <div th:if="${param.message != null}"><span>Something go wrong</span></div>
-    <form th:action="@{/signin}" th:object="${user}" method="post">
+    <div th:if="${param.message != null}"><span th:value="${param.message}"></span></div>
+    <form th:action="@{/login}" th:object="${user}" method="post">
         <div class="name-value"><p>Email: </p><input type="email" th:field="*{username}"></div>
         <div class="name-value"><p>Password: </p><input type="password" th:field="*{password}"></div>
         <div class="links">
