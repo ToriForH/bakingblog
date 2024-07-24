@@ -1,19 +1,18 @@
 package com.herchanivska.viktoriia.bakingblog.mapping;
 
-import com.herchanivska.viktoriia.bakingblog.dto.UserSignUpDto;
+import com.herchanivska.viktoriia.bakingblog.dto.UserResponseDto;
 import com.herchanivska.viktoriia.bakingblog.model.User;
 import org.modelmapper.AbstractConverter;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UserMapper extends AbstractConverter<UserSignUpDto, User> {
+public class UserResponseDtoMapper extends AbstractConverter<User, UserResponseDto> {
     @Override
-    protected User convert(UserSignUpDto value) {
-        return User.builder()
+    protected UserResponseDto convert(User value) {
+        return UserResponseDto.builder()
                 .email(value.getEmail())
                 .username(value.getUsername())
                 .birthDate(value.getBirthDate())
-                .password(value.getPassword())
                 .build();
     }
 }

@@ -1,7 +1,10 @@
 package com.herchanivska.viktoriia.bakingblog.service.serviceimpl;
 
 import com.herchanivska.viktoriia.bakingblog.constants.Role;
+import com.herchanivska.viktoriia.bakingblog.dto.UserResponseDto;
 import com.herchanivska.viktoriia.bakingblog.dto.UserSignUpDto;
+import com.herchanivska.viktoriia.bakingblog.dto.UserUpdateDto;
+import com.herchanivska.viktoriia.bakingblog.dto.UserUpdatePasswordDto;
 import com.herchanivska.viktoriia.bakingblog.exception.*;
 import com.herchanivska.viktoriia.bakingblog.model.User;
 import com.herchanivska.viktoriia.bakingblog.repository.UserRepository;
@@ -42,34 +45,52 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User update(User user) {
-        User exist = findById(user.getId());
-        if(!user.getEmail().equals(exist.getEmail())) {
+    public User update(UserUpdateDto user, Long id) {
+        User userToUpdate = getUserById(id);
+        if(!user.getEmail().equals(userToUpdate.getEmail())) {
             Optional<User> byEmail = userRepository.findByEmail(user.getEmail());
             if (byEmail.isPresent()) throw new UserExistByEmailException("User with email " + user.getEmail() + " already exist.");
         }
-        if (!user.getUsername().equals(exist.getUsername())) {
+        if (!user.getUsername().equals(userToUpdate.getUsername())) {
             Optional<User> byUsername = userRepository.findByUsername(user.getUsername());
             if (byUsername.isPresent()) throw new UserExistByUsernameException("User with username " + user.getUsername() + " already exist.");
         }
-        return userRepository.save(user);
+        userToUpdate = mapper.map(user, User.class);
+        userToUpdate.setId(id);
+        return userRepository.save(userToUpdate);
+    }
+
+    @Override
+    public User updatePassword(UserUpdatePasswordDto dto, Long id) {
+        User userToUpdate = getUserById(id);
+        if (!dto.getPassword().equals(dto.getSubmitPassword())) {
+            throw new WrongPasswordSubmitException("New password and submit password fields must be same.");
+        }
+        if (!passwordEncoder.matches(dto.getOldPassword(), userToUpdate.getPassword())) {
+            throw new WrongPasswordException("Old password is not correct.");
+        }
+        userToUpdate.setPassword(passwordEncoder.encode(dto.getPassword()));
+        return userRepository.save(userToUpdate);
     }
 
     @Override
     public void delete(Long id) {
-        User user = findById(id);
+        User user = getUserById(id);
         userRepository.delete(user);
     }
 
     @Override
-    public User findById(Long id) {
+    public UserResponseDto findById(Long id) {
+        return mapper.map(getUserById(id), UserResponseDto.class);
+    }
+
+    private User getUserById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User with id " + id + " does not exist"));
     }
 
     @Override
     public User findByEmail(String email) {
-        Optional<User> user = userRepository.findByEmail(email);
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("User with email " + email + " does not exist"));
     }
