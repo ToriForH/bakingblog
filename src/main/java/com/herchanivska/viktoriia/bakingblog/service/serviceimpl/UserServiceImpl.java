@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -132,12 +133,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Set<User> findFollowers(Long id) {
-        return userRepository.findFollowers(id);
+    public Set<UserSearchDto> findFollowers(Long id) {
+        return userRepository.findFollowers(id)
+                .stream()
+                .map(user -> mapper.map(user, UserSearchDto.class))
+                .collect(Collectors.toSet());
     }
 
     @Override
-    public List<User> findAll() {
-        return userRepository.findAll();
+    public List<UserSearchDto> findAll() {
+        return userRepository.findAll()
+                .stream()
+                .map(user -> mapper.map(user, UserSearchDto.class))
+                .toList();
     }
 }

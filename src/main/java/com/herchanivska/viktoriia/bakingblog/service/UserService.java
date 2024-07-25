@@ -17,6 +17,6 @@ public interface UserService {
     List<UserSearchDto> findAllByUsername(String username);
     void followUser(Long currentUserId, Long userToFollowId);
     void unfollowUser(Long currentUserId, Long userToUnfollowId);
-    Set<User> findFollowers(Long id);
-    List<User> findAll();
+    Set<UserSearchDto> findFollowers(Long id);
+    List<UserSearchDto> findAll();
 }

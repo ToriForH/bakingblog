@@ -13,6 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/users")
@@ -123,5 +124,17 @@ public class UserController {
         return "redirect:/users/" + userId;
     }
 
-    //view all users List<User> findAll();
+    @GetMapping("/{userId}/followers")
+    public String viewFollower(Model model, @PathVariable Long userId) {
+        Set<UserSearchDto> users = userService.findFollowers(userId);
+        model.addAttribute("users", users);
+        return "search-user";
+    }
+
+    @GetMapping("/all") //admin only
+    public String getAll(Model model) {
+        List<UserSearchDto> users = userService.findAll();
+        model.addAttribute("users", users);
+        return "search-user";
+    }
 }
