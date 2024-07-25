@@ -8,7 +8,7 @@
 <div th:replace="header"></div>
 <div>
     <h1>Update profile</h1>
-    <form th:action="@{/users/edit-profile/${userId}}" th:object="${user}" method="post">
+    <form th:action="@{/users/edit/${userId}}" th:object="${user}" method="post">
         <div><p>Email: </p><input type="email" th:field="*{email}"></div>
         <div><p>Username: </p><input type="text" th:field="*{username}"></div>
         <div><p>Birth date: </p><input type="date" min="1900-01-01" th:field="*{birthDate}"></div>

@@ -42,13 +42,21 @@ public class UserController {
         return "redirect:/users/" + savedUser.getId();
     }
 
-    @GetMapping("/edit-profile/{userId}")
+    @GetMapping("/edit/{userId}")
     public String update(Model model, @PathVariable Long userId) {
         model.addAttribute("user", userService.findById(userId));
         return "update-user";
     }
 
-    @PostMapping("/edit-profile/{userId}")
+    @GetMapping("/profile/edit")
+    public String updateMyProfile(Model model, Authentication authentication) {
+        Long currentUserId = ((CustomUserDetails) authentication.getDetails()).getUser().getId();
+        model.addAttribute("user", userService.findById(currentUserId));
+        model.addAttribute("userId", currentUserId);
+        return "update-user";
+    }
+
+    @PostMapping("/edit/{userId}")
     public String update(@Valid UserUpdateDto user, @PathVariable Long userId, BindingResult result) {
         if (result.hasErrors()) {
             return "update-user";
@@ -64,13 +72,26 @@ public class UserController {
     }
 
     @PostMapping("/change-password")
-    public String changePassword(@Valid UserUpdatePasswordDto dto, BindingResult result, Authentication authentication) {
+    public String changePassword(@Valid UserUpdatePasswordDto dto, Authentication authentication) {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getDetails();
         User updatedUser = userService.updatePassword(dto, userDetails.getUser().getId());
         return "redirect:/users/" + updatedUser.getId();
     }
 
-    // delete void delete(Long id);
+    @GetMapping("/delete/{userId}")
+    public String delete(@PathVariable Long userId, Authentication authentication) {
+        Long currentUserId = ((CustomUserDetails) authentication.getDetails()).getUser().getId();
+        userService.delete(userId);
+        if (currentUserId.equals(userId)) return "redirect:/logout";
+        return "redirect:/users/all";
+    }
+
+    @GetMapping("/profile/delete")
+    public String deleteMyProfile(Authentication authentication) {
+        long currentUserId = ((CustomUserDetails) authentication.getDetails()).getUser().getId();
+        return "redirect:/users/delete/" + currentUserId;
+    }
+
     // view profile page view other user profile page User findById(Long id);
     //find user to follow User findByUsername(String username);
     //follow/unfollow user Set<User> findFollowers(Long id);
