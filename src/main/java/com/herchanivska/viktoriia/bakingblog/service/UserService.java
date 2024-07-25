@@ -1,9 +1,6 @@
 package com.herchanivska.viktoriia.bakingblog.service;
 
-import com.herchanivska.viktoriia.bakingblog.dto.UserResponseDto;
-import com.herchanivska.viktoriia.bakingblog.dto.UserSignUpDto;
-import com.herchanivska.viktoriia.bakingblog.dto.UserUpdateDto;
-import com.herchanivska.viktoriia.bakingblog.dto.UserUpdatePasswordDto;
+import com.herchanivska.viktoriia.bakingblog.dto.*;
 import com.herchanivska.viktoriia.bakingblog.model.User;
 
 import java.util.List;
@@ -14,9 +11,12 @@ public interface UserService {
     User update(UserUpdateDto user, Long id);
     User updatePassword(UserUpdatePasswordDto dto, Long id);
     void delete(Long id);
-    UserResponseDto findById(Long id);
+    UserUpdateDto findByIdForUpdate(Long id);
+    UserViewProfileDto getUserProfile(Long id);
     User findByEmail(String email);
-    User findByUsername(String username);
+    List<UserSearchDto> findAllByUsername(String username);
+    void followUser(Long currentUserId, Long userToFollowId);
+    void unfollowUser(Long currentUserId, Long userToUnfollowId);
     Set<User> findFollowers(Long id);
     List<User> findAll();
 }

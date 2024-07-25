@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Search User</title>
+</head>
+<body>
+<div th:replace="header"></div>
+<div>
+  <h1>Search User</h1>
+  <div th:each="user : ${users}">
+    <div><p>Id: </p><span th:value="${user.id}"></span></div>
+    <div><p>Username: </p><span th:value="${user.username}"></span></div>
+    <div><p>Followers: </p><span th:value="${user.followersCount}"></span></div>
+  </div>
+</div>
+</body>
+</html>

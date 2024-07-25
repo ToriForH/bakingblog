@@ -1,8 +1,6 @@
 package com.herchanivska.viktoriia.bakingblog.controller;
 
-import com.herchanivska.viktoriia.bakingblog.dto.UserSignUpDto;
-import com.herchanivska.viktoriia.bakingblog.dto.UserUpdateDto;
-import com.herchanivska.viktoriia.bakingblog.dto.UserUpdatePasswordDto;
+import com.herchanivska.viktoriia.bakingblog.dto.*;
 import com.herchanivska.viktoriia.bakingblog.model.User;
 import com.herchanivska.viktoriia.bakingblog.security.CustomUserDetails;
 import com.herchanivska.viktoriia.bakingblog.service.UserService;
@@ -12,10 +10,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/users")
@@ -44,14 +41,14 @@ public class UserController {
 
     @GetMapping("/edit/{userId}")
     public String update(Model model, @PathVariable Long userId) {
-        model.addAttribute("user", userService.findById(userId));
+        model.addAttribute("user", userService.findByIdForUpdate(userId));
         return "update-user";
     }
 
     @GetMapping("/profile/edit")
     public String updateMyProfile(Model model, Authentication authentication) {
         Long currentUserId = ((CustomUserDetails) authentication.getDetails()).getUser().getId();
-        model.addAttribute("user", userService.findById(currentUserId));
+        model.addAttribute("user", userService.findByIdForUpdate(currentUserId));
         model.addAttribute("userId", currentUserId);
         return "update-user";
     }
@@ -92,8 +89,39 @@ public class UserController {
         return "redirect:/users/delete/" + currentUserId;
     }
 
-    // view profile page view other user profile page User findById(Long id);
-    //find user to follow User findByUsername(String username);
-    //follow/unfollow user Set<User> findFollowers(Long id);
+    @GetMapping("/{userId}")
+    public String getById(Model model, @PathVariable Long userId) {
+        UserViewProfileDto user = userService.getUserProfile(userId);
+        model.addAttribute("user", user);
+        return "view-user";
+    }
+
+    @GetMapping("/profile/my")
+    public String myProfile(Authentication authentication) {
+        long currentUserId = ((CustomUserDetails) authentication.getDetails()).getUser().getId();
+        return "redirect:/users/" + currentUserId;
+    }
+
+    @GetMapping("/search")
+    public String searchByUsername(Model model, @RequestParam String searchedString) {
+        List<UserSearchDto> users = userService.findAllByUsername(searchedString);
+        model.addAttribute("users", users);
+        return "search-user";
+    }
+
+    @GetMapping("/follow/{userId}")
+    public String follow(@PathVariable Long userId, Authentication authentication) {
+        long currentUserId = ((CustomUserDetails) authentication.getDetails()).getUser().getId();
+        userService.followUser(currentUserId, userId);
+        return "redirect:/users/" + userId;
+    }
+
+    @GetMapping("/unfollow/{userId}")
+    public String unfollow(@PathVariable Long userId, Authentication authentication) {
+        long currentUserId = ((CustomUserDetails) authentication.getDetails()).getUser().getId();
+        userService.unfollowUser(currentUserId, userId);
+        return "redirect:/users/" + userId;
+    }
+
     //view all users List<User> findAll();
 }

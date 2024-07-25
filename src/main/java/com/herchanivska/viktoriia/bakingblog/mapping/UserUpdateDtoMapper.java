@@ -1,15 +1,15 @@
 package com.herchanivska.viktoriia.bakingblog.mapping;
 
-import com.herchanivska.viktoriia.bakingblog.dto.UserResponseDto;
+import com.herchanivska.viktoriia.bakingblog.dto.UserUpdateDto;
 import com.herchanivska.viktoriia.bakingblog.model.User;
 import org.modelmapper.AbstractConverter;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UserResponseDtoMapper extends AbstractConverter<User, UserResponseDto> {
+public class UserUpdateDtoMapper extends AbstractConverter<User, UserUpdateDto> {
     @Override
-    protected UserResponseDto convert(User value) {
-        return UserResponseDto.builder()
+    protected UserUpdateDto convert(User value) {
+        return UserUpdateDto.builder()
                 .email(value.getEmail())
                 .username(value.getUsername())
                 .birthDate(value.getBirthDate())

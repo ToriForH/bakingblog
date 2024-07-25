@@ -10,8 +10,8 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @EqualsAndHashCode
-public class UserResponseDto {
-    private String email;
+public class UserSearchDto {
+    private long id;
     private String username;
-    private LocalDate birthDate;
+    private long followersCount;
 }

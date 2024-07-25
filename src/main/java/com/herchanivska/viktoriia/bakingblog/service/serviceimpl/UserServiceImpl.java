@@ -1,10 +1,7 @@
 package com.herchanivska.viktoriia.bakingblog.service.serviceimpl;
 
 import com.herchanivska.viktoriia.bakingblog.constants.Role;
-import com.herchanivska.viktoriia.bakingblog.dto.UserResponseDto;
-import com.herchanivska.viktoriia.bakingblog.dto.UserSignUpDto;
-import com.herchanivska.viktoriia.bakingblog.dto.UserUpdateDto;
-import com.herchanivska.viktoriia.bakingblog.dto.UserUpdatePasswordDto;
+import com.herchanivska.viktoriia.bakingblog.dto.*;
 import com.herchanivska.viktoriia.bakingblog.exception.*;
 import com.herchanivska.viktoriia.bakingblog.model.User;
 import com.herchanivska.viktoriia.bakingblog.repository.UserRepository;
@@ -80,8 +77,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponseDto findById(Long id) {
-        return mapper.map(getUserById(id), UserResponseDto.class);
+    public UserUpdateDto findByIdForUpdate(Long id) {
+        return mapper.map(getUserById(id), UserUpdateDto.class);
+    }
+
+    @Override
+    public UserViewProfileDto getUserProfile(Long id) {
+        return mapper.map(getUserById(id), UserViewProfileDto.class);
     }
 
     private User getUserById(Long id) {
@@ -96,9 +98,37 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findByUsername(String username) {
-        return userRepository.findByUsername(username)
-                .orElseThrow(() -> new NotFoundException("User with username " + username + " does not exist"));
+    public List<UserSearchDto> findAllByUsername(String username) {
+        return userRepository.findAllByUsername(username)
+                .stream().map(user -> mapper.map(user, UserSearchDto.class)).toList();
+    }
+
+    @Override
+    public void followUser(Long currentUserId, Long userToFollowId) {
+        User currentUser = getUserById(currentUserId);
+        User userToFollow = getUserById(userToFollowId);
+        if (!isUserFollowed(currentUserId, userToFollow)) {
+            userToFollow.getFollowers().add(currentUser);
+            userRepository.save(userToFollow);
+        }
+    }
+
+    @Override
+    public void unfollowUser(Long currentUserId, Long userToUnfollowId) {
+        User currentUser = getUserById(currentUserId);
+        User userToUnfollow = getUserById(userToUnfollowId);
+        if (isUserFollowed(currentUserId, userToUnfollow)) {
+            userToUnfollow.getFollowers().remove(currentUser);
+            userRepository.save(userToUnfollow);
+        }
+    }
+
+    private boolean isUserFollowed(Long currentUserId, User userToFollow) {
+        return userToFollow.getFollowers()
+                .stream()
+                .map(User::getId)
+                .toList()
+                .contains(currentUserId);
     }
 
     @Override

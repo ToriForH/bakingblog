@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>User</title>
+</head>
+<body>
+<div th:replace="header"></div>
+<div>
+  <h1>User</h1>
+  <div th:object="${user}">
+    <div><p>Id: </p><span th:value="*{id}"></span></div>
+    <div><p>Username: </p><span th:value="*{username}"></span></div>
+    <div><p>Birth date: </p><span th:value="*{birthDate}"></span></div>
+    <div><p>Followers: </p><span th:value="*{followersCount}"></span></div>
+    <div><p>Recipes: </p><span th:value="*{userRecipes}"></span></div>
+  </div>
+</div>
+</body>
+</html>

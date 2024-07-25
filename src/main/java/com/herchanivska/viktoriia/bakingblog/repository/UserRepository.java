@@ -12,7 +12,7 @@ import java.util.Set;
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
     Optional<User> findByUsername(String username);
-
+    Set<User> findAllByUsername(String username);
     @Query(value = """
             SELECT f.* FROM users f
             JOIN user_followers uf ON f.id = uf.follower_id
